@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse-plugin-code-generator
+Bundle-SymbolicName: eclipse-plugin-code-generator;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: eclipse_plugin_code_generator.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.ui;bundle-version="3.9.1",
+ org.eclipse.jdt.core;bundle-version="3.9.1",
+ org.eclipse.ui.ide;bundle-version="3.9.1",
+ org.eclipse.ui.ide.application;bundle-version="1.0.400",
+ org.eclipse.core.resources;bundle-version="3.8.101",
+ org.eclipse.jface.text;bundle-version="3.8.101",
+ org.eclipse.ui.editors;bundle-version="3.8.100"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
