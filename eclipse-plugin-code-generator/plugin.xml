@@ -10,7 +10,7 @@
             objectClass="org.eclipse.jdt.core.IJavaElement">
          <menu
                id="eclipse-plugin-code-generator.menu1"
-               label="Generating Code"
+               label="Code Generator"
                path="additions">
             <separator
                   name="group1">
