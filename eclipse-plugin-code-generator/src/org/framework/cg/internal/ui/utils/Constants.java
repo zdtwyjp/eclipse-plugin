@@ -3,20 +3,31 @@ package org.framework.cg.internal.ui.utils;
 import org.eclipse.jdt.ui.JavaUI;
 
 public class Constants {
-	
-	
 	/**
-	 * Description
+	 * WizardMessage
 	 */
-	public static final String OpenNewClassWizardAction_text = "Class";
-	public static final String OpenNewClassWizardAction_description = "Opens the new class wizards";
-	public static final String OpenNewClassWizardAction_tooltip = "Opens the new Java package wizard";
-	public static final String NewClassCreationWizard_title = "New Java Class";
-	public static final String NewClassWizardPage_title = "Java Class";
-	public static final String NewClassWizardPage_description = "Create a new Java class.";
+	public static final String WizardPage_Common_browse = "Browse...";
+	public static final String OpenGeneratorWizardAction_text = "Generator";
+	public static final String OpenGeneratorWizardAction_description = "Opens the new configuration wizards";
+	public static final String OpenGeneratorWizardAction_tooltip = "Opens the new configuration wizard";
+	public static final String GeneratorCreationWizard_title = "Code Generator";
+	public static final String GeneratorWizardPage_title = "Code Configuration";
+	public static final String GeneratorWizardPage_description = "Create file(JSP Action Mng MngImpl Dao and DaoImpl).";
+	public static final String GeneratorWizardPage_jsp_config = "JSP Configuration";
+	public static final String GeneratorWizardPage_jsp_config_filename = "&File name:";
+	public static final String GeneratorWizardPage_jsp_config_filepath = "&File path:";
+	
+	
 	/**
 	 * JavaHelpContext
 	 */
-	public static final String PREFIX= JavaUI.ID_PLUGIN + '.';
+	public static final String PREFIX = JavaUI.ID_PLUGIN + '.';
 	public static final String OPEN_CLASS_WIZARD_ACTION = PREFIX + "open_class_wizard_action";
+	
+	
+	/**
+	 * Page name
+	 */
+	public static final String JSP_PAGE_DETAIL = "detail.jsp";
+	public static final String JSP_PAGE_MAIN = "main.jsp";
 }

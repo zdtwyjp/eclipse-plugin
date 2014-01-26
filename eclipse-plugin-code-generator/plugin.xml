@@ -6,7 +6,6 @@
       <objectContribution
             adaptable="true"
             id="eclipse-plugin-code-generator.contribution1"
-            nameFilter="*.java"
             objectClass="org.eclipse.jdt.core.IJavaElement">
          <menu
                id="eclipse-plugin-code-generator.menu1"
