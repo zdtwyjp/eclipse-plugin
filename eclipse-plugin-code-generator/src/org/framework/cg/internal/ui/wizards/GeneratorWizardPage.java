@@ -4,9 +4,9 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -20,20 +20,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 
-public class GeneratorWizardPage extends WizardPage {
-
+public class GeneratorWizardPage extends NewTypeWizardPage {
+	private final static String PAGE_NAME= "GeneratorWizardPage";
 	private Text containerText;
 
 	private Text fileText;
 
 	private ISelection selection;
 
-	protected GeneratorWizardPage(String pageName) {
-		super(pageName);
-	}
-
 	public GeneratorWizardPage(ISelection selection) {
-		super("wizardPage");
+		super(true, PAGE_NAME);
 		setTitle("Multi-page Editor File");
 		setDescription("This wizard creates a new file with *.txt extension that can be opened by a multi-page editor.");
 		this.selection = selection;
@@ -133,38 +129,38 @@ public class GeneratorWizardPage extends WizardPage {
 		String fileName = getFileName();
 
 		if (getContainerName().length() == 0) {
-			updateStatus("File container must be specified");
+			updateInfoStatus("File container must be specified");
 			return;
 		}
 		if (container == null
 				|| (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
-			updateStatus("File container must exist");
+			updateInfoStatus("File container must exist");
 			return;
 		}
 		if (!container.isAccessible()) {
-			updateStatus("Project must be writable");
+			updateInfoStatus("Project must be writable");
 			return;
 		}
 		if (fileName.length() == 0) {
-			updateStatus("File name must be specified");
+			updateInfoStatus("File name must be specified");
 			return;
 		}
 		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
-			updateStatus("File name must be valid");
+			updateInfoStatus("File name must be valid");
 			return;
 		}
 		int dotLoc = fileName.lastIndexOf('.');
 		if (dotLoc != -1) {
 			String ext = fileName.substring(dotLoc + 1);
 			if (ext.equalsIgnoreCase("txt") == false) {
-				updateStatus("File extension must be \"txt\"");
+				updateInfoStatus("File extension must be \"txt\"");
 				return;
 			}
 		}
-		updateStatus(null);
+		updateInfoStatus(null);
 	}
 
-	private void updateStatus(String message) {
+	private void updateInfoStatus(String message) {
 		setErrorMessage(message);
 		setPageComplete(message == null);
 	}
