@@ -1,6 +1,7 @@
 package org.framework.cg.internal.ui.wizards;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -8,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.File;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -33,9 +35,6 @@ import org.framework.cg.internal.ui.utils.Constants;
 import org.framework.cg.internal.ui.utils.FreemarkerUtil;
 import org.framework.cg.internal.ui.utils.TagTemplateUtil;
 import org.framework.cg.internal.ui.vo.JavaModel;
-
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateException;
 
 public class GeneratorCreationWizard extends Wizard implements INewWizard {
 
@@ -200,7 +199,7 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 //		m.put("param", this);
 		
 		try {
-			FreemarkerUtil.process("main_jsp.ftl",null, null);
+//			FreemarkerUtil.process("main_jsp.ftl",null, null);
 //			TagUtil.render(this.pageContext, this.template, m);
 		} catch (Exception e) {
 			e.printStackTrace();
