@@ -31,6 +31,8 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 	private Text fileText;
 
 	private ISelection selection;
+	
+	private Class selectedClass;
 
 	public GeneratorWizardPage(ISelection selection) {
 		super(true, PAGE_NAME);
@@ -38,6 +40,14 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		setDescription(Constants.GeneratorWizardPage_description);
 		this.selection = selection;
 	}
+	
+	
+
+	public Class getSelectedClass() {
+		return selectedClass;
+	}
+
+
 
 	@Override
 	public void createControl(Composite parent) {
@@ -130,6 +140,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 			} else if (obj instanceof IJavaElement) {
 				IJavaElement javaElement = (IJavaElement) obj;
 				fileText.setText(javaElement.getPath().toString());
+				this.selectedClass = javaElement.getClass();
 			}
 		}
 	}
