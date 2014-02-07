@@ -68,4 +68,25 @@ public class Constants {
 	public static final String PACKAGE_IMPL = "impl";
 	public static final String PACKAGE_DAO = "dao";
 	
+	/**
+	 * Column name
+	 */
+	public static final String COLUMN_NAME_NUMBER = "No";
+	public static final String COLUMN_NAME_FIELD_NAME = "FieldName";
+	public static final String COLUMN_NAME_FIELD_TYPE = "FieldType";
+	public static final String COLUMN_NAME_NULLABLE = "Nullable";
+	public static final String COLUMN_NAME_LABEL = "Label";
+	public static final String COLUMN_NAME_TAG_TYPE = "TagType";
+	public static final String COLUMN_NAME_QUERYABLE = "Queryable";	
+	
+	/**
+	 * Tag name
+	 */
+	public static final String TAG_NAME_INPUT = "input";
+	public static final String TAG_NAME_SELECT = "select";
+	public static final String TAG_NAME_DATEPICKER = "datePicker";
+	public static final String TAG_NAME_TEXTAREA = "textarea";
+	public static final String TAG_NAME_MULTISELECT = "multiSelect";
+	public static final String TAG_NAME_MULTISELECT_11 = "multiSelect1.1";
+	
 }

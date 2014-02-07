@@ -27,7 +27,7 @@ public class TestTableViewer {
 	public static void main(String[] args) {
 		final Display display = Display.getDefault();
 		final Shell shell = new Shell();
-		shell.setSize(500, 375);
+		shell.setSize(600, 475);
 		shell.setText("SWT Application");
 		//
 		final TableViewer tableViewer = new TableViewer(shell, SWT.CHECK|SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER|SWT.V_SCROLL|SWT.H_SCROLL);

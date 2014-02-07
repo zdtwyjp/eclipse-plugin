@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -35,12 +36,14 @@ import org.eclipse.jdt.internal.ui.util.CoreUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.framework.cg.internal.ui.utils.Constants;
 import org.framework.cg.internal.ui.utils.FreemarkerUtil;
-import org.framework.cg.internal.ui.utils.StringUtil;
+import org.framework.cg.internal.ui.utils.ServiceUtil;
+import org.framework.cg.internal.ui.vo.FieldModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,8 +195,8 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		monitor.beginTask("Creating " + fileName, 2);
 		ICompilationUnit compilationUnit = page.getCompilationUnit();
 		String className = compilationUnit.getElementName();
-		className = StringUtil.getClassName(className);
-		String lowerCaseClassName = StringUtil.classNameToLowerCase(className);
+		className = ServiceUtil.getClassName(className);
+		String lowerCaseClassName = ServiceUtil.classNameToLowerCase(className);
 		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		/** Create JSP File*/
@@ -219,7 +222,6 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		/** Create DaoImpl File*/
 		String daoImplJavaPath = javaPath + "/" + Constants.PACKAGE_DAO + "/" + Constants.PACKAGE_IMPL;
 		createJavaFile(root, monitor, daoImplJavaPath, className, Constants.PAGE_JAVA_DAOIMPL, Constants.TEMPLATE_PAGE_DAOIMPL);
-		
 		
 //		File tx = new File(path);
 //		try {
@@ -265,46 +267,32 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 	}
 	
 	private InputStream openContentStream(String ftl) {
+		TableViewer tableViewer = page.getTableViewer();
+		@SuppressWarnings("unchecked")
+		List<FieldModel> list = (List<FieldModel>)tableViewer.getInput();
 		JSONArray ja = new JSONArray();
-		JSONObject jo = new JSONObject();
 		ICompilationUnit compilationUnit = page.getCompilationUnit();
 		String className = compilationUnit.getElementName();
-		className = StringUtil.getClassName(className);
-		try {
-			IType[] allTypes = compilationUnit.getAllTypes();
-			for(IType iType : allTypes) {
-				IField[] tempFields = iType.getFields();
-				for(IField field : tempFields) {
-					String fieldName = field.getElementName();
-					String typeSignature = field.getTypeSignature();
-					if (fieldName.endsWith("Id")) {
-						continue;
-					}
-					log.info("fieldName > " + fieldName + ",typeSignature > " + typeSignature);
-					jo.put("fieldName", fieldName);
-					jo.put("fieldType", StringUtil.convertFieldType(typeSignature));
-					ja.add(jo);
-				}
-			}
-		}catch(JavaModelException e1) {
-			e1.printStackTrace();
+		className = ServiceUtil.getClassName(className);
+		for(FieldModel fm : list) {
+			JSONObject jo = fm.toJSONObject();
+			ja.add(jo);
 		}
 		Map map = new HashMap();
 		map.put("appname", "${appname}");
 		map.put("gkGrid", "${gkGrid}");
 		String jsonFields = ja.toString();
-		System.out.println(jsonFields);
+		log.info("jsonFields > " + jsonFields);
 		map.put("fields", jsonFields);
-		String prePath = StringUtil.createPrepath(className);
+		String prePath = ServiceUtil.createPrepath(className);
 		map.put("prePath", prePath);
-		String lowerCaseClassName = StringUtil.classNameToLowerCase(className);
-		System.out.println(lowerCaseClassName);
+		String lowerCaseClassName = ServiceUtil.classNameToLowerCase(className);
 		map.put("lowerCaseClassName", lowerCaseClassName);
 		map.put("className", className);
-		String packageStr = StringUtil.getPackageNameFromClassName(className);
+		String packageStr = ServiceUtil.getPackageNameFromClassName(className);
 		map.put("package", packageStr);
 		map.put("mappingPath", prePath);
-		
+		log.info("Map > " + map.toString());
 		try {
 			freemarkerUtil.process(ftl, map);
 		}catch(Exception e2) {
