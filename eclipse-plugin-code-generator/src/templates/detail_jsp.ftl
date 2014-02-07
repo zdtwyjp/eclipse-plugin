@@ -15,5 +15,5 @@
   		<cs:button id="save" value="保存" cssClass="button-nomal" btnModel="ajax" action="${prePath}/save.do" type="submit" validate="true"></cs:button>
   	</cs:buttonPannel>
   	
-	<cs:hidden name="kb01.kb01Id"></cs:hidden>
+	<cs:hidden name="${lowerCaseClassName}.${lowerCaseClassName}Id"></cs:hidden>
 </cs:html>
