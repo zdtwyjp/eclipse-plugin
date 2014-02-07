@@ -193,10 +193,12 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		ICompilationUnit compilationUnit = page.getCompilationUnit();
 		String className = compilationUnit.getElementName();
 		className = StringUtil.getClassName(className);
+		String lowerCaseClassName = StringUtil.classNameToLowerCase(className);
 		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		/** Create JSP File*/
-		createJSPFile(root, monitor, containerName);
+		String jspContainerName = containerName + "/" + lowerCaseClassName;
+		createJSPFile(root, monitor, jspContainerName);
 		
 		/** Create Act File*/
 		String actJavaPath = javaPath + "/" + Constants.PACKAGE_ACT;
