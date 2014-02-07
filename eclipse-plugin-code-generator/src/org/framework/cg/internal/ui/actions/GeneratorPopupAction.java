@@ -1,10 +1,5 @@
 package org.framework.cg.internal.ui.actions;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,6 +36,7 @@ public class GeneratorPopupAction implements IObjectActionDelegate {
 		// shell,
 		// "Eclipse-plugin-code-generator",
 		// "Run was executed.");
+		
 		OpenGeneratorWizardAction act = new OpenGeneratorWizardAction();
 		act.run();
 	}

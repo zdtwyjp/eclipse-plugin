@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -32,7 +33,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 
 	private ISelection selection;
 	
-	private Class selectedClass;
+	private ICompilationUnit compilationUnit;
 
 	public GeneratorWizardPage(ISelection selection) {
 		super(true, PAGE_NAME);
@@ -40,13 +41,16 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		setDescription(Constants.GeneratorWizardPage_description);
 		this.selection = selection;
 	}
-	
-	
 
-	public Class getSelectedClass() {
-		return selectedClass;
-	}
 
+//	public IJavaElement getJavaElement() {
+//		return javaElement;
+//	}
+//
+//	public void setJavaElement(IJavaElement javaElement) {
+//		this.javaElement = javaElement;
+//	}
+	
 
 
 	@Override
@@ -118,6 +122,16 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 
 	}
 
+	public ICompilationUnit getCompilationUnit() {
+		return compilationUnit;
+	}
+
+
+	public void setCompilationUnit(ICompilationUnit compilationUnit) {
+		this.compilationUnit = compilationUnit;
+	}
+
+
 	/**
 	 * Tests if the current workbench selection is a suitable container to use.
 	 */
@@ -137,10 +151,10 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 					container = ((IResource) obj).getParent();
 				}
 				containerText.setText(container.getFullPath().toString());
-			} else if (obj instanceof IJavaElement) {
-				IJavaElement javaElement = (IJavaElement) obj;
-				fileText.setText(javaElement.getPath().toString());
-				this.selectedClass = javaElement.getClass();
+			} else if (obj instanceof ICompilationUnit) {
+				ICompilationUnit compilationUnit = (ICompilationUnit) obj;
+				fileText.setText(compilationUnit.getPath().toString());
+				this.compilationUnit = compilationUnit;
 			}
 		}
 	}

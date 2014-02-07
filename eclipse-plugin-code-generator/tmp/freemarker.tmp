@@ -1,0 +1,16 @@
+<%@ page language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="cs" uri="/cs" %>
+<cs:html title="${appname}">
+	<cs:pannel cols="4">
+		<cs:input name="user.id" label="id" colspan="2"></cs:input>
+		<cs:input name="user.name" label="name" colspan="2"></cs:input>
+		<cs:input name="user.fieldName" label="fieldName" colspan="2"></cs:input>
+		<cs:input name="user.fieldType" label="fieldType" colspan="2"></cs:input>
+  	</cs:pannel>
+  	
+  	<cs:buttonPannel type="detail">
+  		<cs:button id="save" value="保存" cssClass="button-nomal" btnModel="ajax" action="/admin/u/user/save.do" type="submit" validate="true"></cs:button>
+  	</cs:buttonPannel>
+  	
+	<cs:hidden name="kb01.kb01Id"></cs:hidden>
+</cs:html>
