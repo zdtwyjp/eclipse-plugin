@@ -84,11 +84,12 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 	public boolean performFinish() {
 		final String containerName = page.getContainerName();
 		final String fileName = page.getFileName();
+		final String javaPath = page.getJavaPath();
 		IRunnableWithProgress op = new IRunnableWithProgress() {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException {
 				try {
-					doFinish(containerName, fileName, monitor);
+					doFinish(containerName, fileName, javaPath, monitor);
 				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
 				} finally {
@@ -108,21 +109,12 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		}
 		return true;
 	}
-
-	private void doFinish(String containerName, String fileName,
-			IProgressMonitor monitor) throws CoreException {
-		// create a sample file
-		monitor.beginTask("Creating " + fileName, 2);
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+	
+	private void createJSPFile(IWorkspaceRoot root, IProgressMonitor monitor, 
+			String containerName) throws CoreException{
 		IResource resource = root.findMember(new Path(containerName));
-		// if (!resource.exists() || !(resource instanceof IContainer)) {
-		// throwCoreException("Container \"" + containerName +
-		// "\" does not exist.");
-		// }
-		// IContainer container = (IContainer) resource;
-
 		IPath containerNamePath = getOutputLocation(containerName);
-
+		/** JSP file path*/
 		if (!root.exists(containerNamePath)) {
 			IFolder folder = root.getFolder(containerNamePath);
 			CoreUtility.createDerivedFolder(folder, true, true,
@@ -130,13 +122,8 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		} else {
 			monitor.worked(1);
 		}
-
-//		IFolder folder = root.getFolder(containerNamePath);
-//		String jspContent = createOutputStr(fileName);
-
-		/**
-		 * Create JSP.
-		 */
+		root = ResourcesPlugin.getWorkspace().getRoot();
+		resource = root.findMember(new Path(containerName));
 		/** Create main.jsp*/
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(Constants.PAGE_JSP_MAIN));
@@ -165,7 +152,71 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+	}
+	
+	private void createJavaFile(IWorkspaceRoot root, IProgressMonitor monitor, 
+			String javaPath, String className, 
+			String javaPageName, String templateName) throws CoreException{
 		
+		/** JAVA file path*/
+		IResource javaPathResource = root.findMember(new Path(javaPath));
+		IPath newJavaPath = getOutputLocation(javaPath);
+		if (!root.exists(newJavaPath)){
+			IFolder folder = root.getFolder(newJavaPath);
+			CoreUtility.createDerivedFolder(folder, true, true,
+					new SubProgressMonitor(monitor, 1));
+		} else {
+			monitor.worked(1);
+		}
+		root = ResourcesPlugin.getWorkspace().getRoot();
+		javaPathResource = root.findMember(new Path(javaPath));
+		
+		IContainer actContainer = (IContainer) javaPathResource;
+		final IFile actFile = actContainer.getFile(new Path(className + javaPageName));
+		try {
+			InputStream stream = openContentStream(templateName);
+			if (actFile.exists()) {
+				actFile.setContents(stream, true, true, monitor);
+			} else {
+				actFile.create(stream, true, monitor);
+			}
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void doFinish(String containerName, String fileName, String javaPath,
+			IProgressMonitor monitor) throws CoreException {
+		// create a sample file
+		monitor.beginTask("Creating " + fileName, 2);
+		ICompilationUnit compilationUnit = page.getCompilationUnit();
+		String className = compilationUnit.getElementName();
+		className = StringUtil.getClassName(className);
+		
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		/** Create JSP File*/
+		createJSPFile(root, monitor, containerName);
+		
+		/** Create Act File*/
+		String actJavaPath = javaPath + "/" + Constants.PACKAGE_ACT;
+		createJavaFile(root, monitor, actJavaPath, className, Constants.PAGE_JAVA_ACT, Constants.TEMPLATE_PAGE_ACT);
+		
+		/** Create Mng File*/
+		String mngJavaPath = javaPath + "/" + Constants.PACKAGE_MNG;
+		createJavaFile(root, monitor, mngJavaPath, className, Constants.PAGE_JAVA_MNG, Constants.TEMPLATE_PAGE_MNG);
+		
+		/** Create MngImpl File*/
+		String mngImplJavaPath = javaPath + "/" + Constants.PACKAGE_MNG + "/" + Constants.PACKAGE_IMPL;
+		createJavaFile(root, monitor, mngImplJavaPath, className, Constants.PAGE_JAVA_MNGIMPL, Constants.TEMPLATE_PAGE_MNGIMPL);
+		
+		/** Create Dao File*/
+		String daoJavaPath = javaPath + "/" + Constants.PACKAGE_DAO;
+		createJavaFile(root, monitor, daoJavaPath, className, Constants.PAGE_JAVA_DAO, Constants.TEMPLATE_PAGE_DAO);
+		
+		/** Create DaoImpl File*/
+		String daoImplJavaPath = javaPath + "/" + Constants.PACKAGE_DAO + "/" + Constants.PACKAGE_IMPL;
+		createJavaFile(root, monitor, daoImplJavaPath, className, Constants.PAGE_JAVA_DAOIMPL, Constants.TEMPLATE_PAGE_DAOIMPL);
 		
 		
 //		File tx = new File(path);
@@ -247,6 +298,10 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		String lowerCaseClassName = StringUtil.classNameToLowerCase(className);
 		System.out.println(lowerCaseClassName);
 		map.put("lowerCaseClassName", lowerCaseClassName);
+		map.put("className", className);
+		String packageStr = StringUtil.getPackageNameFromClassName(className);
+		map.put("package", packageStr);
+		map.put("mappingPath", prePath);
 		
 		try {
 			freemarkerUtil.process(ftl, map);

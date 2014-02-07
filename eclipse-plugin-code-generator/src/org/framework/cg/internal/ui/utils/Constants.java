@@ -16,7 +16,9 @@ public class Constants {
 	public static final String GeneratorWizardPage_jsp_config = "JSP Configuration";
 	public static final String GeneratorWizardPage_jsp_config_filename = "&File name:";
 	public static final String GeneratorWizardPage_jsp_config_filepath = "&File path:";
-	
+	public static final String GeneratorWizardPage_java_config = "JAVA Configuration";
+	public static final String GeneratorWizardPage_java_config_filename = "&File name:";
+	public static final String GeneratorWizardPage_java_config_filepath = "&File path:";
 	
 	/**
 	 * JavaHelpContext
@@ -57,5 +59,13 @@ public class Constants {
 	 */
 	public static final String TMP_FILE_PATH = "D:/tmp/";
 	public static final String TMP_FILE_NAME = "freemarker.tmp";
+	
+	/**
+	 * Package name
+	 */
+	public static final String PACKAGE_ACT = "act";
+	public static final String PACKAGE_MNG = "mng";
+	public static final String PACKAGE_IMPL = "impl";
+	public static final String PACKAGE_DAO = "dao";
 	
 }

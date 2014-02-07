@@ -30,6 +30,8 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 	private Text containerText;
 
 	private Text fileText;
+	
+	private Text javaPathText;
 
 	private ISelection selection;
 	
@@ -116,6 +118,38 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 			}
 		});
 		
+		/** JAVA Configuration*/ 
+		Group javaGrp = new Group(container, SWT.NONE);
+		javaGrp.setText(Constants.GeneratorWizardPage_java_config);
+		layout = new GridLayout();
+		javaGrp.setLayout(layout);
+		layout.numColumns = 3;
+		layout.verticalSpacing = 9;
+		
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 4;
+		javaGrp.setLayoutData(gd);
+		
+		label = new Label(javaGrp, SWT.NULL);
+		label.setText(Constants.GeneratorWizardPage_java_config_filepath);
+
+		javaPathText = new Text(javaGrp, SWT.BORDER | SWT.SINGLE);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		javaPathText.setLayoutData(gd);
+		javaPathText.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				dialogChanged();
+			}
+		});
+
+		button = new Button(javaGrp, SWT.PUSH);
+		button.setText(Constants.WizardPage_Common_browse);
+		button.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				handleJavaBrowse();
+			}
+		});
+		
 		initialize();
 		dialogChanged();
 		setControl(container);
@@ -176,6 +210,17 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		}
 	}
 
+	private void handleJavaBrowse() {
+		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
+				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+				"Select new file container");
+		if (dialog.open() == ContainerSelectionDialog.OK) {
+			Object[] result = dialog.getResult();
+			if (result.length == 1) {
+				javaPathText.setText(((Path) result[0]).toString());
+			}
+		}
+	}
 	/**
 	 * Ensures that both text fields are set.
 	 */
@@ -195,10 +240,10 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 //			return;
 //		}
 		
-		if (!container.isAccessible()) {
-			updateInfoStatus("Project must be writable");
-			return;
-		}
+//		if (!container.isAccessible()) {
+//			updateInfoStatus("Project must be writable");
+//			return;
+//		}
 		
 //		if (fileName.length() == 0) {
 //			updateInfoStatus("File name must be specified");
@@ -230,6 +275,10 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 
 	public String getFileName() {
 		return fileText.getText();
+	}
+	
+	public String getJavaPath(){
+		return javaPathText.getText();
 	}
 	
 	private GridLayout initGridLayout(GridLayout layout, boolean margins) {

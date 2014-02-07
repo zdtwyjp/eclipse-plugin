@@ -16,6 +16,6 @@ public interface ${className}Mng extends BaseGkGridMng<${className}, Long> {
 	* @return ${className}
 	* @throws
 	*/
-	${className} save${className}(A01 ${lowerCaseClassName}) throws AppException;
+	${className} save${className}(${className} ${lowerCaseClassName}) throws AppException;
 	
 }

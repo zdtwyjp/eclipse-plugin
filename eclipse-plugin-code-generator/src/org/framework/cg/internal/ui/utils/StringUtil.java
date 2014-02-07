@@ -56,6 +56,14 @@ public class StringUtil {
 		className = pre + className.substring(1);
 		return className;
 	}
+	
+	public static String getPackageNameFromClassName(String className){
+		if(isEmpty(className)){
+			throw new IllegalArgumentException("Illegal arguments!");
+		}
+		String pre = className.substring(0, 1).toLowerCase();
+		return pre;
+	}
 
 	// public static String createClassPath(String path) {
 	// if(isEmpty(path)) {

@@ -1,3 +1,4 @@
+
 package org.framework.cg.internal.ui.utils;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class FreemarkerUtil {
 		if(cfg == null){
 			cfg = new Configuration();
 			// 设置模板文件位置
-			cfg.setDirectoryForTemplateLoading(new File("E:/Repository/Eclipse/eclipse-plugin/eclipse-plugin-code-generator/src/templates"));
+			cfg.setDirectoryForTemplateLoading(new File("E:/Repository/GitHub/eclipse-plugin/eclipse-plugin-code-generator/src/templates"));
 		}
 	}
 
