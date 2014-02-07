@@ -44,7 +44,6 @@ import org.framework.cg.internal.ui.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class GeneratorCreationWizard extends Wizard implements INewWizard {
 
 	private GeneratorWizardPage page;

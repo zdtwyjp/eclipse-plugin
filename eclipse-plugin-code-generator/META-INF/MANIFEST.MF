@@ -22,7 +22,11 @@ Bundle-ClassPath: .,
  lib/commons-logging-1.1.1.jar,
  lib/ezmorph-1.0.4.jar,
  lib/freemarker-2.3.20.jar,
+<<<<<<< HEAD
  lib/json-lib-2.2.2-jdk15.jar,
  lib/logback-classic-1.0.13.jar,
  lib/logback-core-1.0.13.jar,
  lib/slf4j-api-1.7.5.jar
+=======
+ lib/json-lib-2.2.2-jdk15.jar
+>>>>>>> branch 'master' of https://github.com/zdtwyjp/eclipse-plugin.git

@@ -30,7 +30,6 @@
 			<version>2.2.2</version>
 			<classifier>jdk15</classifier>
 		</dependency>
-		
 		<!-- 日志 -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
