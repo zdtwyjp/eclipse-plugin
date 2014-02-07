@@ -28,6 +28,34 @@ public class Constants {
 	/**
 	 * Page name
 	 */
-	public static final String JSP_PAGE_DETAIL = "detail.jsp";
-	public static final String JSP_PAGE_MAIN = "main.jsp";
+	public static final String PAGE_JSP_DETAIL = "detail.jsp";
+	public static final String PAGE_JSP_MAIN = "main.jsp";
+	public static final String PAGE_JAVA_ACT = "Act.java";
+	public static final String PAGE_JAVA_DAO = "Dao.java";
+	public static final String PAGE_JAVA_DAOIMPL = "DaoImpl.java";
+	public static final String PAGE_JAVA_MNG = "Mng.java";
+	public static final String PAGE_JAVA_MNGIMPL = "MngImpl.java";
+	
+	/**
+	 * Tempalte name
+	 */
+	public static final String TEMPLATE_PAGE_DETAIL = "detail_jsp.ftl";
+	public static final String TEMPLATE_PAGE_MAIN = "main_jsp.ftl";
+	public static final String TEMPLATE_PAGE_ACT = "act.ftl";
+	public static final String TEMPLATE_PAGE_DAO = "dao.ftl";
+	public static final String TEMPLATE_PAGE_DAOIMPL = "daoImpl.ftl";
+	public static final String TEMPLATE_PAGE_MNG = "mng.ftl";
+	public static final String TEMPLATE_PAGE_MNGIMPL = "mngImpl.ftl";
+	
+	/**
+	 * PrePath
+	 */
+	public static final String PRE_PATH = "/admin";
+	
+	/**
+	 * tmp file path and name
+	 */
+	public static final String TMP_FILE_PATH = "D:/tmp/";
+	public static final String TMP_FILE_NAME = "freemarker.tmp";
+	
 }

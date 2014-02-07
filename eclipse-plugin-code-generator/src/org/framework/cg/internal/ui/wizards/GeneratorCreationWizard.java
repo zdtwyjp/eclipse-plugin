@@ -1,15 +1,18 @@
 package org.framework.cg.internal.ui.wizards;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.eclipse.core.internal.resources.File;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +26,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.util.CoreUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,13 +40,17 @@ import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.framework.cg.internal.ui.utils.Constants;
 import org.framework.cg.internal.ui.utils.FreemarkerUtil;
-import org.framework.cg.internal.ui.utils.TagTemplateUtil;
-import org.framework.cg.internal.ui.vo.JavaModel;
+import org.framework.cg.internal.ui.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class GeneratorCreationWizard extends Wizard implements INewWizard {
 
 	private GeneratorWizardPage page;
 	private IStructuredSelection selection;
+	private FreemarkerUtil freemarkerUtil = new FreemarkerUtil();
+	private Logger log = LoggerFactory.getLogger(GeneratorCreationWizard.class);
 
 	public GeneratorCreationWizard(GeneratorWizardPage page) {
 		setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
@@ -121,18 +132,17 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 			monitor.worked(1);
 		}
 
-		IFolder folder = root.getFolder(containerNamePath);
-		String jspContent = createOutputStr(fileName);
+//		IFolder folder = root.getFolder(containerNamePath);
+//		String jspContent = createOutputStr(fileName);
 
-		// String cuName= getCompilationUnitName(typeName);
-		//			ICompilationUnit parentCU= pack.createCompilationUnit(cuName, "", false, new SubProgressMonitor(monitor, 2)); //$NON-NLS-1$
-
-
-//		String path = root.getLocation() + containerName + "/detail.jsp";
+		/**
+		 * Create JSP.
+		 */
+		/** Create main.jsp*/
 		IContainer container = (IContainer) resource;
-		final IFile file = container.getFile(new Path("detail.jsp"));
+		final IFile file = container.getFile(new Path(Constants.PAGE_JSP_MAIN));
 		try {
-			InputStream stream = openContentStream();
+			InputStream stream = openContentStream(Constants.TEMPLATE_PAGE_MAIN);
 			if (file.exists()) {
 				file.setContents(stream, true, true, monitor);
 			} else {
@@ -143,7 +153,19 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 			e.printStackTrace();
 		}
 		
-		
+		/** Create detail.jsp*/
+		final IFile detailFile = container.getFile(new Path(Constants.PAGE_JSP_DETAIL));
+		try {
+			InputStream stream = openContentStream(Constants.TEMPLATE_PAGE_DETAIL);
+			if (detailFile.exists()) {
+				detailFile.setContents(stream, true, true, monitor);
+			} else {
+				detailFile.create(stream, true, monitor);
+			}
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
 		
 		
 		
@@ -190,56 +212,109 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		throw new CoreException(status);
 	}
 	
-	private InputStream openContentStream() {
-		String contents =
-			"This is the initial file contents for *.txt file that should be word-sorted in the Preview page of the multi-page editor";
-		
-		
-//		SimpleHash m = new SimpleHash();
-//		m.put("param", this);
+	private InputStream openContentStream(String ftl) {
+		JSONArray ja = new JSONArray();
+		JSONObject jo = new JSONObject();
+		ICompilationUnit compilationUnit = page.getCompilationUnit();
+		String className = compilationUnit.getElementName();
+		className = StringUtil.getClassName(className);
+		try {
+			IType[] allTypes = compilationUnit.getAllTypes();
+			for(IType iType : allTypes) {
+				IField[] tempFields = iType.getFields();
+				for(IField field : tempFields) {
+					String fieldName = field.getElementName();
+					String typeSignature = field.getTypeSignature();
+					if (fieldName.endsWith("Id")) {
+						continue;
+					}
+					log.debug("typeSignature > " + typeSignature);
+					jo.put("fieldName", fieldName);
+					jo.put("fieldType", StringUtil.convertFieldType(typeSignature));
+					ja.add(jo);
+				}
+			}
+		}catch(JavaModelException e1) {
+			e1.printStackTrace();
+		}
+		Map map = new HashMap();
+		map.put("appname", "${appname}");
+		map.put("gkGrid", "${gkGrid}");
+		String jsonFields = ja.toString();
+		System.out.println(jsonFields);
+		map.put("fields", jsonFields);
+		String prePath = StringUtil.createPrepath(className);
+		map.put("prePath", prePath);
+		String lowerCaseClassName = StringUtil.classNameToLowerCase(className);
+		System.out.println(lowerCaseClassName);
+		map.put("lowerCaseClassName", lowerCaseClassName);
 		
 		try {
-//			FreemarkerUtil.process("main_jsp.ftl",null, null);
-//			TagUtil.render(this.pageContext, this.template, m);
-		} catch (Exception e) {
+			freemarkerUtil.process(ftl, map);
+		}catch(Exception e2) {
+			e2.printStackTrace();
+		}
+		try {
+			InputStream is = new FileInputStream(new File(FreemarkerUtil.getTempFilePath()));
+			return is;
+		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
-		return new ByteArrayInputStream(contents.getBytes());
+		return new ByteArrayInputStream("".getBytes());
 	}
 
 	public IPath getOutputLocation(String fold) {
 		return new Path(fold).makeAbsolute();
 	}
 
-	private String createOutputStr(String fileName) {
-		List<JavaModel> fieldsList = new ArrayList<JavaModel>();
-		Class selectedClass = page.getSelectedClass();
-		String className = selectedClass.getSimpleName();
-		System.out.println(selectedClass.getSimpleName());
-		Field[] fields = selectedClass.getDeclaredFields();
-		JavaModel jm = null;
-		for (Field field : fields) {
-			String fieldName = field.getName();
-			Class fieldType = field.getType();
-			System.out.println(fieldName);
-			System.out.println(fieldType);
-			if (fieldName.endsWith("Id")) {
-				continue;
-			}
-			jm = new JavaModel();
-			jm.setFieldName(fieldName);
-			jm.setFieldType(fieldType.toString());
-			fieldsList.add(jm);
-		}
-
-		String pre = className.substring(0, 1);
-		className = pre.toLowerCase() + className.substring(1);
-		return TagTemplateUtil.generateJspPage(className, fieldsList);
-
-	}
+//	private String createOutputStr(String fileName) {
+//		List<JavaModel> fieldsList = new ArrayList<JavaModel>();
+//		Class selectedClass = page.getSelectedClass();
+//		String className = selectedClass.getSimpleName();
+//		System.out.println(selectedClass.getSimpleName());
+//		Field[] fields = selectedClass.getDeclaredFields();
+//		JavaModel jm = null;
+//		for (Field field : fields) {
+//			String fieldName = field.getName();
+//			Class fieldType = field.getType();
+//			System.out.println(fieldName);
+//			System.out.println(fieldType);
+//			if (fieldName.endsWith("Id")) {
+//				continue;
+//			}
+//			jm = new JavaModel();
+//			jm.setFieldName(fieldName);
+//			jm.setFieldType(fieldType.toString());
+//			fieldsList.add(jm);
+//		}
+//
+//		String pre = className.substring(0, 1);
+//		className = pre.toLowerCase() + className.substring(1);
+//		return TagTemplateUtil.generateJspPage(className, fieldsList);
+//
+//	}
+//	
+//	private String createProperties(String fileName) {
+//		List<JavaModel> fieldsList = new ArrayList<JavaModel>();
+//		Class selectedClass = page.getSelectedClass();
+//		String className = selectedClass.getSimpleName();
+//		Field[] fields = selectedClass.getDeclaredFields();
+//		JavaModel jm = null;
+//		for (Field field : fields) {
+//			String fieldName = field.getName();
+//			Class fieldType = field.getType();
+//			if (fieldName.endsWith("Id")) {
+//				continue;
+//			}
+//			jm = new JavaModel();
+//			jm.setFieldName(fieldName);
+//			jm.setFieldType(fieldType.toString());
+//			fieldsList.add(jm);
+//		}
+//		String pre = className.substring(0, 1);
+//		className = pre.toLowerCase() + className.substring(1);
+//		return TagTemplateUtil.generateJspPage(className, fieldsList);
+//
+//	}
 
 }
