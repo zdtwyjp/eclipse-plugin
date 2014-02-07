@@ -16,14 +16,16 @@ public class StringUtil {
 		String result = "";
 		if(fieldType.contains("String")) {
 			result = "String";
-		}else if(fieldType.contains("Integer") || fieldType.contains("int")) {
+		}else if(fieldType.contains("Integer") || fieldType.contains("I")) {
 			result = "Integer";
 		}else if(fieldType.contains("Date")) {
 			result = "Date";
-		}else if(fieldType.contains("Long") || fieldType.contains("long")) {
+		}else if(fieldType.contains("Long") || fieldType.contains("J")) {
 			result = "Long";
-		}else if(fieldType.contains("Double") || fieldType.contains("double")) {
+		}else if(fieldType.contains("Double") || fieldType.contains("D")) {
 			result = "Double";
+		}else if(fieldType.contains("Short") || fieldType.contains("S")) {
+			result = "Short";
 		}
 		return result;
 	}

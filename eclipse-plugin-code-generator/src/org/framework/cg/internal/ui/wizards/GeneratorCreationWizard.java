@@ -278,7 +278,7 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 					if (fieldName.endsWith("Id")) {
 						continue;
 					}
-					log.debug("typeSignature > " + typeSignature);
+					log.info("fieldName > " + fieldName + ",typeSignature > " + typeSignature);
 					jo.put("fieldName", fieldName);
 					jo.put("fieldType", StringUtil.convertFieldType(typeSignature));
 					ja.add(jo);
