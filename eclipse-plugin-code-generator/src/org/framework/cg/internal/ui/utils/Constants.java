@@ -77,7 +77,9 @@ public class Constants {
 	public static final String COLUMN_NAME_NULLABLE = "Nullable";
 	public static final String COLUMN_NAME_LABEL = "Label";
 	public static final String COLUMN_NAME_TAG_TYPE = "TagType";
-	public static final String COLUMN_NAME_QUERYABLE = "Queryable";	
+	public static final String COLUMN_NAME_QUERYABLE = "Queryable";
+	public static final String COLUMN_NAME_COLUMNDISPLAYABLE = "ColumnDisplayable";
+	public static final String COLUMN_NAME_UNIQUE = "Unique";
 	
 	/**
 	 * Tag name

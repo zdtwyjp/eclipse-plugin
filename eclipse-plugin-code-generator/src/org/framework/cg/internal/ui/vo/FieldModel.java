@@ -19,18 +19,11 @@ public class FieldModel {
 
 	private Boolean queryable;
 
-	public FieldModel() {}
+	private Boolean columnDisplayable;
 
-	public FieldModel(Long no, String fieldName, String fieldType,
-			Boolean nullable, String label, String tagType) {
-		super();
-		this.no = no;
-		this.fieldName = fieldName;
-		this.fieldType = fieldType;
-		this.nullable = nullable;
-		this.label = label;
-		this.tagType = tagType;
-	}
+	private Boolean unique;
+
+	public FieldModel() {}
 
 	public Long getNo() {
 		return no;
@@ -88,6 +81,22 @@ public class FieldModel {
 		this.queryable = queryable;
 	}
 
+	public Boolean getColumnDisplayable() {
+		return columnDisplayable;
+	}
+
+	public void setColumnDisplayable(Boolean columnDisplayable) {
+		this.columnDisplayable = columnDisplayable;
+	}
+
+	public Boolean getUnique() {
+		return unique;
+	}
+
+	public void setUnique(Boolean unique) {
+		this.unique = unique;
+	}
+
 	public JSONObject toJSONObject() {
 		JSONObject jo = new JSONObject();
 		jo.put("no", this.no);
@@ -97,6 +106,8 @@ public class FieldModel {
 		jo.put("tagType", this.tagType);
 		jo.put("nullable", this.nullable);
 		jo.put("queryable", this.queryable);
+		jo.put("columnDisplayable", this.columnDisplayable);
+		jo.put("unique", this.unique);
 		return jo;
 	}
 }

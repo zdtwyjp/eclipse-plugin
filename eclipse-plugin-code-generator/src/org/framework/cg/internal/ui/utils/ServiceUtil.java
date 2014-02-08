@@ -107,6 +107,8 @@ public class ServiceUtil {
 					fm.setNullable(true);
 					fm.setTagType(tagType);
 					fm.setQueryable(false);
+					fm.setColumnDisplayable(true);
+					fm.setUnique(false);
 					list.add(fm);
 				}
 			}
@@ -115,7 +117,32 @@ public class ServiceUtil {
 		}
 		return list;
 	}
-
+	
+	public static String createAjaxGridSql(List<FieldModel> list, String className){
+		String id = classNameToLowerCase(className) + "_id";
+		String sql = "select " + id + ", " ;
+		for(FieldModel fm : list) {
+			if(fm.getColumnDisplayable()){
+				sql += fm.getFieldName() + ", ";
+			}
+		}
+		sql = sql.trim().substring(0, sql.length() - 2);
+		sql += " from " + className;
+		return sql;
+	}
+	
+	public static String createQueryParam(List<FieldModel> list){
+		String queryParam = "";
+		for(FieldModel fm : list) {
+			if(fm.getQueryable()){
+				queryParam += "$('#"+fm.getFieldName()+"')" + ", ";
+			}
+		}
+		if(queryParam.length() > 1){
+			queryParam = queryParam.trim().substring(0, queryParam.length() - 2);
+		}
+		return queryParam;
+	}
 	
 
 	public static void main(String[] args) {

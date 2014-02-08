@@ -23,6 +23,10 @@ public class TableLabelProvider extends LabelProvider implements
 				return fm.getNullable().toString();
 			} else if (columnIndex == 6) {
 				return fm.getQueryable().toString();
+			} else if (columnIndex == 7) {
+				return fm.getColumnDisplayable().toString();
+			} else if (columnIndex == 8) {
+				return fm.getUnique().toString();
 			}
 		}
 		return null;

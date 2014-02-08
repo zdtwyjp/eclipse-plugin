@@ -25,6 +25,8 @@ import com.tibet.app.k.mng.Kc01Mng;
 import com.tibet.app.util.Constants;
 import com.tibet.app.util.ServiceUtil;
 
+<#assign text=fields />
+<#assign jsonFields=text?eval />
 @Service
 public class ${className}MngImpl extends BaseGkGridMngImpl<${className}, Long> implements ${className}Mng {
 	private ${className}Dao ${lowerCaseClassName}Dao;
@@ -38,6 +40,12 @@ public class ${className}MngImpl extends BaseGkGridMngImpl<${className}, Long> i
 
 	@Override
 	public ${className} save${className}(${className} bean) throws AppException {
+		<#list jsonFields as item>
+		<#if item.unique?default(false)==true>
+		this.${lowerCaseClassName}Dao.checkExists(bean, "${item.fieldName}:${item.label}");
+		</#if>
+		</#list>
+		
 		if(bean.get${className}Id() != null) {
 			bean.setGxsj(new Date());
 			Updater<${className}> updater = new Updater<${className}>(bean);
@@ -53,10 +61,8 @@ public class ${className}MngImpl extends BaseGkGridMngImpl<${className}, Long> i
 	@Override
 	public void ajaxGrid(HttpServletRequest request,
 			HttpServletResponse response, Object... args) {
-		// 获取用户集合
-		Map<String, String> m = new HashMap<String, String>();
-		List<Object> params = new ArrayList<Object>();
-		GkGridParams pa = new GkGridParams(request, response, m, sql, params.toArray());
+		String sql = "${ajaxGridSql}";
+		GkGridParams pa = new GkGridParams(request, response, sql);
 		this.loadGkGrid(pa);		
 	}
 }

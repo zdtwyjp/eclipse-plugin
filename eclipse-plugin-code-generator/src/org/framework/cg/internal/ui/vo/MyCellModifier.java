@@ -36,6 +36,10 @@ public class MyCellModifier implements ICellModifier {
 			return new Boolean(fm.getNullable().equals(true));
 		} else if (property.equals(Constants.COLUMN_NAME_QUERYABLE)) {
 			return new Boolean(fm.getQueryable().equals(true));
+		} else if (property.equals(Constants.COLUMN_NAME_COLUMNDISPLAYABLE)) {
+			return new Boolean(fm.getColumnDisplayable().equals(true));
+		} else if (property.equals(Constants.COLUMN_NAME_UNIQUE)) {
+			return new Boolean(fm.getUnique().equals(true));
 		}
 		throw new RuntimeException("error column name : " + property);
 	}
@@ -80,7 +84,21 @@ public class MyCellModifier implements ICellModifier {
 			} else {
 				fm.setQueryable(false);
 			}
-		}else {
+		} else if (property.equals(Constants.COLUMN_NAME_COLUMNDISPLAYABLE)) {
+			Boolean newValue = (Boolean) value;
+			if (newValue.booleanValue()) {
+				fm.setColumnDisplayable(true);
+			} else {
+				fm.setColumnDisplayable(false);
+			}
+		} else if (property.equals(Constants.COLUMN_NAME_UNIQUE)) {
+			Boolean newValue = (Boolean) value;
+			if (newValue.booleanValue()) {
+				fm.setUnique(true);
+			} else {
+				fm.setUnique(false);
+			}
+		} else {
 			throw new RuntimeException("错误列名:" + property);
 		}
 		tv.update(fm, null);

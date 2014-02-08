@@ -34,7 +34,7 @@
 	</#list>
     	
 		<cs:placeHolder colspan="3" haveLabel="false" cssStyle="text-align:right;">
-			<cs:button id="search" cssClass="button-ser" validate="false" type="submit" btnModel="search" searchParam="{gkGrid:[$('#dah'),$('#jyz'),$('#xmmc'),$('#xmbh'),$('#fam')]}" value="搜索"></cs:button>
+			<cs:button id="search" cssClass="button-ser" validate="false" type="submit" btnModel="search" searchParam="{gkGrid:[${queryParam}]}" value="搜索"></cs:button>
 		</cs:placeHolder>
 	</cs:pannel>
 	<cs:grid grid="${gkGrid}"></cs:grid>

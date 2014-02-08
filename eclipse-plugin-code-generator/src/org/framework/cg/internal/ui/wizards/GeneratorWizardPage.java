@@ -188,6 +188,26 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 			}
 		});
 		
+		final TableColumn newColumnTableColumn_7 = new TableColumn(table, SWT.NONE);
+		newColumnTableColumn_7.setText(Constants.COLUMN_NAME_COLUMNDISPLAYABLE);
+		newColumnTableColumn_7.addSelectionListener(new SelectionAdapter(){
+			boolean asc = true;
+			public void widgetSelected(SelectionEvent e){
+				tableViewer.setSorter(asc ? Sorter.COLUMNDISPLAYABLE_ASC : Sorter.COLUMNDISPLAYABLE_DESC);
+				asc = !asc;
+			}
+		});
+		
+		final TableColumn newColumnTableColumn_8 = new TableColumn(table, SWT.NONE);
+		newColumnTableColumn_8.setText(Constants.COLUMN_NAME_UNIQUE);
+		newColumnTableColumn_8.addSelectionListener(new SelectionAdapter(){
+			boolean asc = true;
+			public void widgetSelected(SelectionEvent e){
+				tableViewer.setSorter(asc ? Sorter.UNIQUE_ASC : Sorter.UNIQUE_DESC);
+				asc = !asc;
+			}
+		});
+		
 		tableViewer.setContentProvider(new ContentProvider());
 		tableViewer.setLabelProvider(new TableLabelProvider());
 //		tableViewer.setInput(People.getPeople());
@@ -200,9 +220,11 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 				Constants.COLUMN_NAME_FIELD_TYPE, 
 				Constants.COLUMN_NAME_TAG_TYPE,
 				Constants.COLUMN_NAME_NULLABLE,
-				Constants.COLUMN_NAME_QUERYABLE
+				Constants.COLUMN_NAME_QUERYABLE,
+				Constants.COLUMN_NAME_COLUMNDISPLAYABLE,
+				Constants.COLUMN_NAME_UNIQUE
 		});
-		CellEditor[] cellEditor = new CellEditor[7];
+		CellEditor[] cellEditor = new CellEditor[9];
 		cellEditor[0] = null;
 		cellEditor[1] = null;
 		cellEditor[2] = new TextCellEditor(tableViewer.getTable());
@@ -210,6 +232,8 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		cellEditor[4] = new ComboBoxCellEditor(tableViewer.getTable(), MyCellModifier.TAGS, SWT.READ_ONLY);
 		cellEditor[5] = new CheckboxCellEditor(tableViewer.getTable());
 		cellEditor[6] = new CheckboxCellEditor(tableViewer.getTable());
+		cellEditor[7] = new CheckboxCellEditor(tableViewer.getTable());
+		cellEditor[8] = new CheckboxCellEditor(tableViewer.getTable());
 		tableViewer.setCellEditors(cellEditor);
 		ICellModifier modifier = new MyCellModifier(tableViewer);
 		tableViewer.setCellModifier(modifier);
@@ -377,12 +401,18 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 	private void dialogChanged() {
 		IResource container = ResourcesPlugin.getWorkspace().getRoot()
 				.findMember(new Path(getContainerName()));
-//		String fileName = getFileName();
-
-		if (getContainerName().length() == 0) {
-			updateInfoStatus("File container must be specified");
+		String containerName = getContainerName();
+		if (containerName.length() == 0) {
+			updateInfoStatus("File path must be specified");
 			return;
 		}
+		
+		String javaPath = getJavaPath();
+		if (javaPath.length() == 0) {
+			updateInfoStatus("File path must be specified");
+			return;
+		}
+		
 //		if (container == null
 //				|| (container.getType() & (IResource.PROJECT | IResource.FOLDER)) == 0) {
 //			updateInfoStatus("File container must exist");
@@ -394,22 +424,6 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 //			return;
 //		}
 		
-//		if (fileName.length() == 0) {
-//			updateInfoStatus("File name must be specified");
-//			return;
-//		}
-//		if (fileName.replace('\\', '/').indexOf('/', 1) > 0) {
-//			updateInfoStatus("File name must be valid");
-//			return;
-//		}
-//		int dotLoc = fileName.lastIndexOf('.');
-//		if (dotLoc != -1) {
-//			String ext = fileName.substring(dotLoc + 1);
-//			if (ext.equalsIgnoreCase("txt") == false) {
-//				updateInfoStatus("File extension must be \"txt\"");
-//				return;
-//			}
-//		}
 		updateInfoStatus(null);
 	}
 

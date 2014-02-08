@@ -28,9 +28,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.util.CoreUtility;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -43,6 +40,7 @@ import org.eclipse.ui.IWorkbench;
 import org.framework.cg.internal.ui.utils.Constants;
 import org.framework.cg.internal.ui.utils.FreemarkerUtil;
 import org.framework.cg.internal.ui.utils.ServiceUtil;
+import org.framework.cg.internal.ui.utils.StringUtil;
 import org.framework.cg.internal.ui.vo.FieldModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -188,10 +186,53 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 			e.printStackTrace();
 		}
 	}
+	
+	private String checkJSPFilePath(String filePath, String lowerCaseClassName){
+		if(StringUtil.isEmpty(filePath) || StringUtil.isEmpty(lowerCaseClassName)){
+			throw new IllegalArgumentException("Illegal arguments!");
+		}
+		String newPath = filePath;
+		String pre = lowerCaseClassName.substring(0, 1);
+		if(filePath.endsWith(pre) || filePath.endsWith(pre+"/")){
+			if(!filePath.endsWith("/")){
+				newPath += "/";
+			}
+			newPath += lowerCaseClassName;
+		}else if(!filePath.endsWith(lowerCaseClassName) && !filePath.endsWith(lowerCaseClassName+"/")){
+			if(!filePath.endsWith("/")){
+				newPath += "/";
+			}
+			newPath += pre + "/" + lowerCaseClassName;
+		}
+		return newPath;
+	}
+	
+	private String checkJavaFilePath(String filePath, String lowerCaseClassName){
+		if(StringUtil.isEmpty(filePath) || StringUtil.isEmpty(lowerCaseClassName)){
+			throw new IllegalArgumentException("Illegal arguments!");
+		}
+		String newPath = filePath;
+		String pre = lowerCaseClassName.substring(0, 1);
+		if(!filePath.endsWith(pre) && !filePath.endsWith(pre+"/")){
+			if(!filePath.endsWith("/")){
+				newPath += "/";
+			}
+			newPath += pre;
+		}
+		return newPath;
+	}
 
 	private void doFinish(String containerName, String fileName, String javaPath,
 			IProgressMonitor monitor) throws CoreException {
-		// create a sample file
+		if (containerName.length() == 0) {
+			throwCoreException("File path must be specified");
+			return;
+		}
+		if (javaPath.length() == 0) {
+			throwCoreException("File path must be specified");
+			return;
+		}
+		
 		monitor.beginTask("Creating " + fileName, 2);
 		ICompilationUnit compilationUnit = page.getCompilationUnit();
 		String className = compilationUnit.getElementName();
@@ -199,11 +240,14 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		String lowerCaseClassName = ServiceUtil.classNameToLowerCase(className);
 		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		
 		/** Create JSP File*/
-		String jspContainerName = containerName + "/" + lowerCaseClassName;
+//		String jspContainerName = containerName + "/" + lowerCaseClassName;
+		String jspContainerName = checkJSPFilePath(containerName, lowerCaseClassName);
 		createJSPFile(root, monitor, jspContainerName);
 		
 		/** Create Act File*/
+		javaPath = checkJavaFilePath(javaPath, lowerCaseClassName);
 		String actJavaPath = javaPath + "/" + Constants.PACKAGE_ACT;
 		createJavaFile(root, monitor, actJavaPath, className, Constants.PAGE_JAVA_ACT, Constants.TEMPLATE_PAGE_ACT);
 		
@@ -222,42 +266,6 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		/** Create DaoImpl File*/
 		String daoImplJavaPath = javaPath + "/" + Constants.PACKAGE_DAO + "/" + Constants.PACKAGE_IMPL;
 		createJavaFile(root, monitor, daoImplJavaPath, className, Constants.PAGE_JAVA_DAOIMPL, Constants.TEMPLATE_PAGE_DAOIMPL);
-		
-//		File tx = new File(path);
-//		try {
-//			FileOutputStream output = new FileOutputStream(tx);
-//			output.write(jspContent.getBytes());
-//			output.flush();
-//			output.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-		// final IFile file = container.getFile(new Path(fileName));
-		// try {
-		// InputStream stream = openContentStream();
-		// if (file.exists()) {
-		// file.setContents(stream, true, true, monitor);
-		// } else {
-		// file.create(stream, true, monitor);
-		// }
-		// stream.close();
-		// } catch (IOException e) {
-		// }
-		// monitor.worked(1);
-		// monitor.setTaskName("Opening file for editing...");
-		// getShell().getDisplay().asyncExec(new Runnable() {
-		// public void run() {
-		// IWorkbenchPage page =
-		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		// try {
-		// IDE.openEditor(page, file, true);
-		// } catch (PartInitException e) {
-		// }
-		// }
-		// });
-		// monitor.worked(1);
 	}
 
 	private void throwCoreException(String message) throws CoreException {
@@ -292,6 +300,10 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		String packageStr = ServiceUtil.getPackageNameFromClassName(className);
 		map.put("package", packageStr);
 		map.put("mappingPath", prePath);
+		String ajaxGridSql = ServiceUtil.createAjaxGridSql(list, className);
+		map.put("ajaxGridSql", ajaxGridSql);
+		String queryParam = ServiceUtil.createQueryParam(list);
+		map.put("queryParam", queryParam);
 		log.info("Map > " + map.toString());
 		try {
 			freemarkerUtil.process(ftl, map);
@@ -310,55 +322,5 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 	public IPath getOutputLocation(String fold) {
 		return new Path(fold).makeAbsolute();
 	}
-
-//	private String createOutputStr(String fileName) {
-//		List<JavaModel> fieldsList = new ArrayList<JavaModel>();
-//		Class selectedClass = page.getSelectedClass();
-//		String className = selectedClass.getSimpleName();
-//		System.out.println(selectedClass.getSimpleName());
-//		Field[] fields = selectedClass.getDeclaredFields();
-//		JavaModel jm = null;
-//		for (Field field : fields) {
-//			String fieldName = field.getName();
-//			Class fieldType = field.getType();
-//			System.out.println(fieldName);
-//			System.out.println(fieldType);
-//			if (fieldName.endsWith("Id")) {
-//				continue;
-//			}
-//			jm = new JavaModel();
-//			jm.setFieldName(fieldName);
-//			jm.setFieldType(fieldType.toString());
-//			fieldsList.add(jm);
-//		}
-//
-//		String pre = className.substring(0, 1);
-//		className = pre.toLowerCase() + className.substring(1);
-//		return TagTemplateUtil.generateJspPage(className, fieldsList);
-//
-//	}
-//	
-//	private String createProperties(String fileName) {
-//		List<JavaModel> fieldsList = new ArrayList<JavaModel>();
-//		Class selectedClass = page.getSelectedClass();
-//		String className = selectedClass.getSimpleName();
-//		Field[] fields = selectedClass.getDeclaredFields();
-//		JavaModel jm = null;
-//		for (Field field : fields) {
-//			String fieldName = field.getName();
-//			Class fieldType = field.getType();
-//			if (fieldName.endsWith("Id")) {
-//				continue;
-//			}
-//			jm = new JavaModel();
-//			jm.setFieldName(fieldName);
-//			jm.setFieldType(fieldType.toString());
-//			fieldsList.add(jm);
-//		}
-//		String pre = className.substring(0, 1);
-//		className = pre.toLowerCase() + className.substring(1);
-//		return TagTemplateUtil.generateJspPage(className, fieldsList);
-//
-//	}
 
 }

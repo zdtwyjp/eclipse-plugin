@@ -45,8 +45,16 @@ public class ${className}Act extends BaseAct{
 		grid.config.setBox("checkbox");
 		grid.config.setId("${lowerCaseClassName}_id");
 		ColModel cm = null;
-		cm = new ColModel("标题", "bt");
-		grid.colModels.add(cm);
+		
+		<#assign text=fields />
+		<#assign jsonFields=text?eval />
+		<#list jsonFields as item>
+		<#if item.columnDisplayable?default(true)==true>
+		cm = new ColModel("${item.label}", "${item.fieldName}");
+		grid.colModels.add(cm);	
+		</#if>
+		</#list>
+		
 		String g = grid.render();
 		m.addAttribute("gkGrid", g);
 		return "${mappingPath}/main";

@@ -10,6 +10,8 @@ public class Sorter extends ViewerSorter {
 		private static final int NULLABLE = 5;
 		private static final int TAG_TYPE = 6;
 		private static final int QUERYABLE = 7;
+		private static final int COLUMNDISPLAYABLE = 8;
+		private static final int UNIQUE = 9;
 		
 		public static final Sorter NO_ASC = new Sorter(NO);
 		public static final Sorter NO_DESC = new Sorter(-NO);
@@ -25,6 +27,10 @@ public class Sorter extends ViewerSorter {
 		public static final Sorter TAG_TYPE_DESC = new Sorter(-TAG_TYPE);
 		public static final Sorter QUERYABLE_ASC = new Sorter(QUERYABLE);
 		public static final Sorter QUERYABLE_DESC = new Sorter(-QUERYABLE);
+		public static final Sorter COLUMNDISPLAYABLE_ASC = new Sorter(COLUMNDISPLAYABLE);
+		public static final Sorter COLUMNDISPLAYABLE_DESC = new Sorter(-COLUMNDISPLAYABLE);
+		public static final Sorter UNIQUE_ASC = new Sorter(UNIQUE);
+		public static final Sorter UNIQUE_DESC = new Sorter(-UNIQUE);
 		
 		private int sortType ;
 		private Sorter(int sortType){
@@ -105,6 +111,26 @@ public class Sorter extends ViewerSorter {
 					Boolean b1 = f1.getQueryable();
 					Boolean b2 = f2.getQueryable();
 					return b2.compareTo(b1);
+				}
+				case COLUMNDISPLAYABLE:{
+					Boolean c1 = f1.getColumnDisplayable();
+					Boolean c2 = f2.getColumnDisplayable();
+					return c1.compareTo(c2);
+				}
+				case -COLUMNDISPLAYABLE:{
+					Boolean c1 = f1.getColumnDisplayable();
+					Boolean c2 = f2.getColumnDisplayable();
+					return c2.compareTo(c1);
+				}
+				case UNIQUE:{
+					Boolean u1 = f1.getUnique();
+					Boolean u2 = f2.getUnique();
+					return u1.compareTo(u2);
+				}
+				case -UNIQUE:{
+					Boolean u1 = f1.getUnique();
+					Boolean u2 = f2.getUnique();
+					return u2.compareTo(u1);
 				}
 			}
 			return 0;
