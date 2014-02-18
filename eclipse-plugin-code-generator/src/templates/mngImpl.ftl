@@ -1,16 +1,9 @@
 package com.tibet.app.${package}.mng.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ctl.sys.common.dao.impl.HibernateDaoImpl;
@@ -22,8 +15,7 @@ import com.tibet.app.a.dao.${className}Dao;
 import com.tibet.app.a.mng.${className}Mng;
 import com.tibet.app.entity.${className};
 import com.tibet.app.k.mng.Kc01Mng;
-import com.tibet.app.util.Constants;
-import com.tibet.app.util.ServiceUtil;
+
 
 <#assign text=fields />
 <#assign jsonFields=text?eval />
@@ -47,12 +39,18 @@ public class ${className}MngImpl extends BaseGkGridMngImpl<${className}, Long> i
 		</#list>
 		
 		if(bean.get${className}Id() != null) {
+			<#--
 			bean.setGxsj(new Date());
+			-->
 			Updater<${className}> updater = new Updater<${className}>(bean);
+			<#--
 			updater.exclude("cjsj");
+			-->
 			bean = (${className})this.${lowerCaseClassName}Dao.updateByUpdater(updater);
 		}else {
+			<#--
 			bean.setCjsj(new Date());
+			-->
 			this.saveOrUpdate(bean);
 		}
 		return bean;

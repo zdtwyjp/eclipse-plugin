@@ -96,8 +96,14 @@ public class ServiceUtil {
 					if (fieldName.endsWith("Id")) {
 						continue;
 					}
-					no++;
+					if (fieldName.equals("serialVersionUID")) {
+						continue;
+					}
 					String fieldType = convertFieldType(typeSignature);
+					if (StringUtil.isEmpty(fieldType)){
+						continue;
+					}
+					no++;
 					String tagType = convertFieldTypeToTagType(fieldType);
 					fm = new FieldModel();
 					fm.setNo(no);
@@ -120,14 +126,14 @@ public class ServiceUtil {
 	
 	public static String createAjaxGridSql(List<FieldModel> list, String className){
 		String id = classNameToLowerCase(className) + "_id";
-		String sql = "select " + id + ", " ;
+		String sql = "select t." + id + ", " ;
 		for(FieldModel fm : list) {
 			if(fm.getColumnDisplayable()){
-				sql += fm.getFieldName() + ", ";
+				sql += "t." + fm.getFieldName() + ", ";
 			}
 		}
 		sql = sql.trim().substring(0, sql.length() - 2);
-		sql += " from " + className;
+		sql += " from " + className + " t ";
 		return sql;
 	}
 	

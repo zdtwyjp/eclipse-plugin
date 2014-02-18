@@ -1,7 +1,5 @@
 package com.tibet.app.${package}.act;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,12 +16,10 @@ import com.ctl.lib.gkgrid.ColModel;
 import com.ctl.lib.gkgrid.GkGrid;
 import com.ctl.sys.JsonModel;
 import com.ctl.sys.common.act.BaseAct;
-import com.ctl.sys.common.vo.GkGridParams;
 import com.ctl.sys.excetion.AppException;
 import com.ctl.sys.util.StringUtil;
 import com.tibet.app.entity.${className};
-import com.tibet.app.k.mng.${className}Mng;
-import com.tibet.app.util.ServiceUtil;
+import com.tibet.app.${package}.mng.${className}Mng;
 
 
 @Controller
@@ -70,7 +66,6 @@ public class ${className}Act extends BaseAct{
 	@RequestMapping(value = "add")
 	public String add(Model m, ${className} bean) {
 		m.addAttribute("bean", bean);
-		bean.setCjsj(new Date());
 		return "${mappingPath}/detail";
 	}
 
@@ -115,13 +110,13 @@ public class ${className}Act extends BaseAct{
 				${lowerCaseClassName}Mng.delete(ids[i]);
 			}catch(Exception e) {
 				e.printStackTrace();
-				tmp += ${lowerCaseClassName}.getBt() + ",";
+				tmp += ${lowerCaseClassName}.get${className}Id() + ",";
 			}
 			
 		}
 		if(!StringUtil.isEmpty(tmp)){
 			tmp = tmp.substring(0, tmp.length()-1);
-			jm.setMsg("删除成功！(标题为："+tmp+"的系统通知存在数据关联不允许删除！)");
+			jm.setMsg("删除成功！(ID为："+tmp+"的记录存在数据关联不允许删除！)");
 		}else{
 			jm.setMsg("删除成功！");
 		}

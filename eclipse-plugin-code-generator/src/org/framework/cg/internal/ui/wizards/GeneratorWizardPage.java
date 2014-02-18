@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -22,8 +23,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -79,7 +78,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		/**
 		 * Inner Container
 		 */
-		/** File name*/ 
+		/** File name*/  
 		Label label = new Label(container, SWT.NULL);
 		label.setText(Constants.GeneratorWizardPage_jsp_config_filename);
 
@@ -96,7 +95,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		
-		/** 自适应宽度*/
+		/** Autoable width*/
 		table.addPaintListener(new PaintListener() {
             public void paintControl(PaintEvent arg0) {
                 TableColumn[] columns = table.getColumns();
@@ -169,6 +168,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		});
 		
 		final TableColumn newColumnTableColumn_5 = new TableColumn(table, SWT.NONE);
+//		newColumnTableColumn_5.setWidth(126);
 		newColumnTableColumn_5.setText(Constants.COLUMN_NAME_NULLABLE);
 		newColumnTableColumn_5.addSelectionListener(new SelectionAdapter(){
 			boolean asc = true;
@@ -179,6 +179,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		});
 		
 		final TableColumn newColumnTableColumn_6 = new TableColumn(table, SWT.NONE);
+//		newColumnTableColumn_6.setWidth(126);
 		newColumnTableColumn_6.setText(Constants.COLUMN_NAME_QUERYABLE);
 		newColumnTableColumn_6.addSelectionListener(new SelectionAdapter(){
 			boolean asc = true;
@@ -189,6 +190,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		});
 		
 		final TableColumn newColumnTableColumn_7 = new TableColumn(table, SWT.NONE);
+//		newColumnTableColumn_7.setWidth(126);
 		newColumnTableColumn_7.setText(Constants.COLUMN_NAME_COLUMNDISPLAYABLE);
 		newColumnTableColumn_7.addSelectionListener(new SelectionAdapter(){
 			boolean asc = true;
@@ -199,6 +201,7 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 		});
 		
 		final TableColumn newColumnTableColumn_8 = new TableColumn(table, SWT.NONE);
+//		newColumnTableColumn_8.setWidth(126);
 		newColumnTableColumn_8.setText(Constants.COLUMN_NAME_UNIQUE);
 		newColumnTableColumn_8.addSelectionListener(new SelectionAdapter(){
 			boolean asc = true;
@@ -208,9 +211,9 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 			}
 		});
 		
+		 
 		tableViewer.setContentProvider(new ContentProvider());
 		tableViewer.setLabelProvider(new TableLabelProvider());
-//		tableViewer.setInput(People.getPeople());
 		tableViewer.setInput(ServiceUtil.createFieldModelFromClass(this.compilationUnit));
 		
 		tableViewer.setColumnProperties(new String[]{
@@ -251,6 +254,8 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 //				}
 //			}
 //		});
+		
+//		 MessageDialog.openInformation(null,"Eclipse-plugin-code-generator","Run was executed.1333444");
 		
 		/** JSP Configuration*/ 
 		Group jspGrp = new Group(container, SWT.NONE);

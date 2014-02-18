@@ -34,8 +34,8 @@
   	</cs:pannel>
   	
   	<cs:buttonPannel type="detail">
-  		<cs:button id="save" value="保存" cssClass="button-nomal" btnModel="ajax" action="${prePath}/save.do" type="submit" validate="true"></cs:button>
+  		<cs:button id="save" value="保存" cssClass="button-nomal" btnModel="ajax" action="${prePath}/save.do" type="submit" validate="true"/>
   	</cs:buttonPannel>
   	
-	<cs:hidden name="${lowerCaseClassName}.${lowerCaseClassName}Id"></cs:hidden>
+	<cs:hidden name="${lowerCaseClassName}.${lowerCaseClassName}Id"/>
 </cs:html>

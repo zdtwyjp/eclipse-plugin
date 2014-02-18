@@ -128,31 +128,33 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		/** Create main.jsp*/
 		IContainer container = (IContainer) resource;
 		final IFile file = container.getFile(new Path(Constants.PAGE_JSP_MAIN));
+		InputStream stream = openContentStream(Constants.TEMPLATE_PAGE_MAIN);
+		if (file.exists()) {
+//			file.setContents(stream, true, true, monitor);
+			throw new RuntimeException("main.jsp is exists!");
+		} else {
+			file.create(stream, true, monitor);
+		}
 		try {
-			InputStream stream = openContentStream(Constants.TEMPLATE_PAGE_MAIN);
-			if (file.exists()) {
-				file.setContents(stream, true, true, monitor);
-			} else {
-				file.create(stream, true, monitor);
-			}
 			stream.close();
-		} catch (IOException e) {
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
 		
 		/** Create detail.jsp*/
 		final IFile detailFile = container.getFile(new Path(Constants.PAGE_JSP_DETAIL));
+		stream = openContentStream(Constants.TEMPLATE_PAGE_DETAIL);
+		if (detailFile.exists()) {
+//			detailFile.setContents(stream, true, true, monitor);
+			throw new RuntimeException("detail.jsp is exists!");
+		} else {
+			detailFile.create(stream, true, monitor);
+		}
 		try {
-			InputStream stream = openContentStream(Constants.TEMPLATE_PAGE_DETAIL);
-			if (detailFile.exists()) {
-				detailFile.setContents(stream, true, true, monitor);
-			} else {
-				detailFile.create(stream, true, monitor);
-			}
 			stream.close();
-		} catch (IOException e) {
+		}catch(IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 	
 	private void createJavaFile(IWorkspaceRoot root, IProgressMonitor monitor, 
@@ -174,13 +176,14 @@ public class GeneratorCreationWizard extends Wizard implements INewWizard {
 		
 		IContainer actContainer = (IContainer) javaPathResource;
 		final IFile actFile = actContainer.getFile(new Path(className + javaPageName));
+		InputStream stream = openContentStream(templateName);
+		if (actFile.exists()) {
+//			actFile.setContents(stream, true, true, monitor);
+			throw new RuntimeException("java file is exists!");
+		} else {
+			actFile.create(stream, true, monitor);
+		}
 		try {
-			InputStream stream = openContentStream(templateName);
-			if (actFile.exists()) {
-				actFile.setContents(stream, true, true, monitor);
-			} else {
-				actFile.create(stream, true, monitor);
-			}
 			stream.close();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -2,9 +2,9 @@
 <%@ taglib prefix="cs" uri="/cs" %>
 <cs:html title="${appname}">
 	<cs:buttonPannel>
-	    <cs:button value="新增"  cssClass="button-add" btnModel="dialog" action="${prePath}/add.do" onEnd="reloadGrid('gkGrid')" type="button" dialogHeight="460" dialogWidth="645"></cs:button>
-		<cs:button value="编辑"  onStart="ckCheckBoxGridSel('gkGrid')" cssClass="button-edit" btnModel="ajax" action="${prePath}/detail.do" dialogHeight="460" dialogWidth="645" param="{id:$('#gkGrid').get(0).g.getSelected()}" type="button"  onEnd="reloadGrid('gkGrid')"></cs:button>
-		<cs:button value="删除" cssClass="button-del" btnModel="delete" action="${prePath}/multiDelete.do" type="button" onStart="ckGridSel('gkGrid')" onEnd="reloadGrid('gkGrid')" param="{id:$('#gkGrid').get(0).g.getSelected()}"></cs:button>
+	    <cs:button value="新增" cssClass="button-add" btnModel="dialog" action="${prePath}/add.do" onEnd="reloadGrid('gkGrid')" type="button"/>
+		<cs:button value="编辑" cssClass="button-edit" btnModel="ajax" action="${prePath}/detail.do" param="{id:$('#gkGrid').get(0).g.getSelected()}" type="button" onStart="ckCheckBoxGridSel('gkGrid')" onEnd="reloadGrid('gkGrid')"/>
+		<cs:button value="删除" cssClass="button-del" confirm="确定要删除选中数据？"  btnModel="ajax" action="${prePath}/multiDelete.do" type="button" onStart="ckGridSel('gkGrid')" onEnd="reloadGrid('gkGrid')" param="{id:$('#gkGrid').get(0).g.getSelected()}"/>
 	</cs:buttonPannel>
 	<cs:pannel cols="6">
 	<#assign text=fields />
@@ -34,7 +34,7 @@
 	</#list>
     	
 		<cs:placeHolder colspan="3" haveLabel="false" cssStyle="text-align:right;">
-			<cs:button id="search" cssClass="button-ser" validate="false" type="submit" btnModel="search" searchParam="{gkGrid:[${queryParam}]}" value="搜索"></cs:button>
+			<cs:button id="search" cssClass="button-ser" validate="false" type="submit" btnModel="search" searchParam="{gkGrid:[${queryParam}]}" value="搜索"/>
 		</cs:placeHolder>
 	</cs:pannel>
 	<cs:grid grid="${gkGrid}"></cs:grid>

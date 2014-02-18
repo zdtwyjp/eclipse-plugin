@@ -1,4 +1,4 @@
-package eclipse_plugin_code_generator;
+package org.framework.cg.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
