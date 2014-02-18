@@ -65,14 +65,14 @@ public class ${className}Act extends BaseAct{
 
 	@RequestMapping(value = "add")
 	public String add(Model m, ${className} bean) {
-		m.addAttribute("bean", bean);
+		m.addAttribute("${lowerCaseClassName}", bean);
 		return "${mappingPath}/detail";
 	}
 
 	@RequestMapping(value = "detail")
 	public String detail(Model m, ${className} bean, Long ${lowerCaseClassName}Id) {
 		bean = this.${lowerCaseClassName}Mng.get(${lowerCaseClassName}Id);
-		m.addAttribute("bean", bean);
+		m.addAttribute("${lowerCaseClassName}", bean);
 		return "${mappingPath}/detail";
 	}
 
@@ -96,8 +96,8 @@ public class ${className}Act extends BaseAct{
 	
 	@RequestMapping(value = "multiDelete", method = RequestMethod.POST)
 	@ResponseBody
-	public JsonModel multiDelete(String id, JsonModel jm) throws AppException{
-		String[] param = id.split(",");
+	public JsonModel multiDelete(String ${lowerCaseClassName}Id, JsonModel jm) throws AppException{
+		String[] param = ${lowerCaseClassName}Id.split(",");
 		Long[] ids = new Long[param.length];
 		String tmp = "";
 		for(int i = 0; i < ids.length;i++) {

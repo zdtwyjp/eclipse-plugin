@@ -25,7 +25,7 @@
 </#if>
  name="${lowerCaseClassName}.${item.fieldName}"<#rt/>
  label="${item.label}"<#rt/>
- colspan="2"<#rt/>
+ colspan="4"<#rt/>
 <#if item.nullable?default(true)==false>
  validator="{required:true}"<#rt/>
 </#if>

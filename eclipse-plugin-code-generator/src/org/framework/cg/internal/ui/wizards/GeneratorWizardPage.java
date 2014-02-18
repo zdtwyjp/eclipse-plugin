@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.framework.cg.internal.ui.utils.Constants;
 import org.framework.cg.internal.ui.utils.ServiceUtil;
+import org.framework.cg.internal.ui.utils.StringUtil;
 import org.framework.cg.internal.ui.vo.ContentProvider;
 import org.framework.cg.internal.ui.vo.MyCellModifier;
 import org.framework.cg.internal.ui.vo.Sorter;
@@ -372,14 +373,27 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 				ICompilationUnit compilationUnit = (ICompilationUnit) obj;
 				fileText.setText(compilationUnit.getPath().toString());
 				this.compilationUnit = compilationUnit;
+				// init jsp and java path
+				String jspDefaultPath = "/" + getProjectName() + Constants.DEFAULT_PATH_JSP; 
+				String javaDefaultPath = "/" + getProjectName() + Constants.DEFAULT_PATH_JAVA;
+				containerText.setText(jspDefaultPath);
+				javaPathText.setText(javaDefaultPath);
 			}
 		}
 	}
 
 	private void handleBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
-				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				"Select new file container");
+		ContainerSelectionDialog dialog = null;
+		String projectName = getProjectName();
+		if(projectName != null){
+			dialog = new ContainerSelectionDialog(
+					getShell(), ResourcesPlugin.getWorkspace().getRoot().getProject(projectName), false,
+					"Select new file container");
+		}else{
+			dialog = new ContainerSelectionDialog(
+					getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+					"Select new file container");
+		}
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
@@ -389,9 +403,17 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 	}
 
 	private void handleJavaBrowse() {
-		ContainerSelectionDialog dialog = new ContainerSelectionDialog(
-				getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
-				"Select new file container");
+		ContainerSelectionDialog dialog = null;
+		String projectName = getProjectName();
+		if(projectName != null){
+			dialog = new ContainerSelectionDialog(
+					getShell(), ResourcesPlugin.getWorkspace().getRoot().getProject(projectName), false,
+					"Select new file container");
+		}else{
+			dialog = new ContainerSelectionDialog(
+					getShell(), ResourcesPlugin.getWorkspace().getRoot(), false,
+					"Select new file container");
+		}
 		if (dialog.open() == ContainerSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result.length == 1) {
@@ -430,6 +452,19 @@ public class GeneratorWizardPage extends NewTypeWizardPage {
 //		}
 		
 		updateInfoStatus(null);
+	}
+	
+	private String getProjectName(){
+		String path = compilationUnit.getPath().toString();
+		if(StringUtil.isEmpty(path)){
+			return null;
+		}
+		path = path.substring(1);
+		String[] paths = path.split("/");
+		if(paths.length > 0){
+			return paths[0];
+		}
+		return null;
 	}
 
 	private void updateInfoStatus(String message) {
