@@ -1,7 +1,5 @@
 package org.framework.cg.internal.ui.vo;
 
-import org.framework.cg.internal.ui.utils.Constants;
-
 import net.sf.json.JSONObject;
 
 public class FieldModel {

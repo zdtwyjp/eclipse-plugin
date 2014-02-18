@@ -29,6 +29,8 @@ public class FreemarkerUtil {
 			// 设置模板文件位置
 			cfg.setDirectoryForTemplateLoading(new File("E:/Repository/Eclipse/eclipse-plugin/eclipse-plugin-code-generator/src/templates"));
 //			cfg.setDirectoryForTemplateLoading();
+			String t = Thread.currentThread().getContextClassLoader().getResource("/").getPath();
+			System.out.println(" >>>>>> " + t);
 		}
 	}
 
