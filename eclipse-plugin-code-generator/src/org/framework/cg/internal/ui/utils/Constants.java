@@ -91,4 +91,10 @@ public class Constants {
 	public static final String TAG_NAME_MULTISELECT = "multiSelect";
 	public static final String TAG_NAME_MULTISELECT_11 = "multiSelect1.1";
 	
+	/**
+	 * default path
+	 */
+	public static final String DEFAULT_PATH_JAVA = "/src/main/java/com/tibet/app";
+	public static final String DEFAULT_PATH_JSP = "/src/main/webapp/WEB-INF/views/admin";
+
 }
