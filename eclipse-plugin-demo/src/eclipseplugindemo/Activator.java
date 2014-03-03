@@ -1,4 +1,4 @@
-package eclipse_plugin_demo;
+package eclipseplugindemo;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
