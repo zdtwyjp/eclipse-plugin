@@ -11,8 +11,8 @@ import com.ctl.sys.common.mng.impl.BaseGkGridMngImpl;
 import com.ctl.sys.common.vo.GkGridParams;
 import com.ctl.sys.excetion.AppException;
 import com.ctl.sys.hibernate4.Updater;
-import com.tibet.app.a.dao.${className}Dao;
-import com.tibet.app.a.mng.${className}Mng;
+import com.tibet.app.${package}.dao.${className}Dao;
+import com.tibet.app.${package}.mng.${className}Mng;
 import com.tibet.app.entity.${className};
 import com.tibet.app.k.mng.Kc01Mng;
 
